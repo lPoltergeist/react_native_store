@@ -5,12 +5,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { StoreCard } from '@/src/components/Card/store-card';
 import { Store } from '@/src/interfaces/store';
 import { useStoreStore } from '@/src/store/useStoreStore';
-import { RelativePathString, useRouter } from 'expo-router';
-import React, { useEffect } from 'react';
+import { RelativePathString, useRouter, useNavigation } from 'expo-router';
+import React, { useEffect, useLayoutEffect } from 'react';
 
 import { HeaderCreateButton } from '@/src/utils/addNew';
-import { useNavigation } from 'expo-router';
-import { useLayoutEffect } from 'react';
 
 export default function StoreListScreen() {
   const navigation = useNavigation();
@@ -24,31 +22,42 @@ export default function StoreListScreen() {
   }, [navigation]);
 
   const router = useRouter();
-  const { stores, isLoading, fetchStores, setSelectedStore, deleteStore } = useStoreStore();
+  const { stores, isLoading, fetchStores, setSelectedStore, deleteStore } =
+    useStoreStore();
 
   useEffect(() => {
     fetchStores();
-  }, [fetchStores])
+  }, [fetchStores]);
 
-  const handleEdit = React.useCallback((store: Store) => {
-    setSelectedStore(store);
-    router.push('/stores/store-modal' as RelativePathString);
-  }, [router, setSelectedStore]);
+  const handleEdit = React.useCallback(
+    (store: Store) => {
+      setSelectedStore(store);
+      router.push('/stores/store-modal' as RelativePathString);
+    },
+    [router, setSelectedStore],
+  );
 
   const handleDelete = (id: string) => {
     Alert.alert(
-      "Excluir Loja",
-      "Tem certeza? Essa ação não pode ser desfeita.",
+      'Excluir Loja',
+      'Tem certeza? Essa ação não pode ser desfeita.',
       [
-        { text: "Cancelar", style: "cancel" },
-        { text: "Excluir", style: "destructive", onPress: () => deleteStore(id) }
-      ]
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Excluir',
+          style: 'destructive',
+          onPress: () => deleteStore(id),
+        },
+      ],
     );
-  }
+  };
 
-  const renderItem = React.useCallback(({ item }: { item: Store }) => (
-    <StoreCard item={item} onEdit={handleEdit} onDelete={handleDelete} />
-  ), [handleEdit]);
+  const renderItem = React.useCallback(
+    ({ item }: { item: Store }) => (
+      <StoreCard item={item} onEdit={handleEdit} onDelete={handleDelete} />
+    ),
+    [handleEdit],
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -117,6 +126,6 @@ const styles = StyleSheet.create({
     gap: 8,
     borderTopWidth: 1,
     borderTopColor: '#F1F5F9',
-    paddingTop: 16
+    paddingTop: 16,
   },
 });

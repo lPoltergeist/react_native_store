@@ -1,70 +1,100 @@
 import { Product } from '@/src/interfaces/product';
 import { useProductStore } from '@/src/store/useProductStore';
 import {
-    Box,
-    Button,
-    ButtonText,
-    FormControl,
-    FormControlLabel,
-    FormControlLabelText,
-    Input,
-    InputField,
-    VStack
+  Box,
+  Button,
+  ButtonText,
+  FormControl,
+  FormControlLabel,
+  FormControlLabelText,
+  Input,
+  InputField,
+  VStack,
 } from '@gluestack-ui/themed';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 
 export default function ProductModal() {
-    const router = useRouter();
-    const { selectedProduct, createProduct, updateProduct, clearSelectedProduct } = useProductStore();
+  const router = useRouter();
+  const params = useLocalSearchParams();
 
-    const [name, setName] = useState(selectedProduct?.name || '');
-    const [category, setCategory] = useState(selectedProduct?.category || '');
-    const [price, setPrice] = useState(selectedProduct?.price.toString() || '');
+  const {
+    selectedProduct,
+    createProduct,
+    updateProduct,
+    clearSelectedProduct,
+  } = useProductStore();
 
-    const handleSave = async () => {
-        const productData = { name, category, price: parseFloat(price) };
+  const [name, setName] = useState(selectedProduct?.name || '');
+  const [category, setCategory] = useState(selectedProduct?.category || '');
+  const [price, setPrice] = useState(selectedProduct?.price.toString() || '');
 
-        if (selectedProduct) {
-            await updateProduct(selectedProduct.id, productData);
-        } else {
-            await createProduct(productData as Omit<Product, 'id'>);
-        }
-
-        clearSelectedProduct();
-        router.back();
+  const handleSave = async () => {
+    const productData = {
+      name,
+      category,
+      price: parseFloat(price),
+      storeId: (selectedProduct
+        ? selectedProduct.storeId
+        : params.storeId) as string,
     };
 
-    const handleGoBack = () => {
-        clearSelectedProduct();
-        router.back();
-    };
+    if (selectedProduct) {
+      await updateProduct(selectedProduct.id, productData);
+    } else {
+      await createProduct(productData as Omit<Product, 'id'>);
+    }
 
-    return (
-        <Box flex={1} bg="$white" p="$6">
-            <VStack space="lg">
-                <FormControl>
-                    <FormControlLabel><FormControlLabelText>Nome do Produto</FormControlLabelText></FormControlLabel>
-                    <Input><InputField value={name} onChangeText={setName} /></Input>
-                </FormControl>
+    clearSelectedProduct();
+    router.back();
+  };
 
-                <FormControl>
-                    <FormControlLabel><FormControlLabelText>Categoria</FormControlLabelText></FormControlLabel>
-                    <Input><InputField value={category} onChangeText={setCategory} /></Input>
-                </FormControl>
+  const handleGoBack = () => {
+    clearSelectedProduct();
+    router.back();
+  };
 
-                <FormControl>
-                    <FormControlLabel><FormControlLabelText>Preço</FormControlLabelText></FormControlLabel>
-                    <Input><InputField value={price} onChangeText={setPrice} keyboardType="numeric" /></Input>
-                </FormControl>
+  return (
+    <Box flex={1} bg="$white" p="$6">
+      <VStack space="lg">
+        <FormControl>
+          <FormControlLabel>
+            <FormControlLabelText>Nome do Produto</FormControlLabelText>
+          </FormControlLabel>
+          <Input>
+            <InputField value={name} onChangeText={setName} />
+          </Input>
+        </FormControl>
 
-                <Button onPress={handleSave} mt="$4">
-                    <ButtonText>Salvar Produto</ButtonText>
-                </Button>
-                <Button onPress={handleGoBack} mt="$4">
-                    <ButtonText>Voltar</ButtonText>
-                </Button>
-            </VStack>
-        </Box>
-    );
+        <FormControl>
+          <FormControlLabel>
+            <FormControlLabelText>Categoria</FormControlLabelText>
+          </FormControlLabel>
+          <Input>
+            <InputField value={category} onChangeText={setCategory} />
+          </Input>
+        </FormControl>
+
+        <FormControl>
+          <FormControlLabel>
+            <FormControlLabelText>Preço</FormControlLabelText>
+          </FormControlLabel>
+          <Input>
+            <InputField
+              value={price}
+              onChangeText={setPrice}
+              keyboardType="numeric"
+            />
+          </Input>
+        </FormControl>
+
+        <Button onPress={handleSave} mt="$4">
+          <ButtonText>Salvar Produto</ButtonText>
+        </Button>
+        <Button onPress={handleGoBack} mt="$4">
+          <ButtonText>Voltar</ButtonText>
+        </Button>
+      </VStack>
+    </Box>
+  );
 }

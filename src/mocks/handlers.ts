@@ -92,10 +92,9 @@ export const handlers = [
       return new HttpResponse('Store not found', { status: 404 });
     }
 
-
     const updatedStore = {
       ...stores[storeIndex],
-      ...updateData
+      ...updateData,
     };
 
     stores[storeIndex] = updatedStore;
@@ -115,6 +114,7 @@ export const handlers = [
   http.get(`${BASE_URL}/products`, ({ request }) => {
     const url = new URL(request.url);
     const storeId = url.searchParams.get('storeId');
+    console.log('storeId', storeId);
     const page = Number(url.searchParams.get('page') || '1');
     const limit = 10;
 
@@ -133,7 +133,11 @@ export const handlers = [
   http.post(`${BASE_URL}/products`, async ({ request }) => {
     const newProduct = (await request.json()) as Omit<Product, 'id'>;
 
-    console.log(newProduct);
+    console.log('newProduct', newProduct);
+    if (!newProduct.storeId) {
+      return new HttpResponse('Invalid storeId', { status: 400 });
+    }
+
     if (!newProduct.name || !newProduct.category || !newProduct.price) {
       return new HttpResponse('Invalid product name, category or price', {
         status: 400,
