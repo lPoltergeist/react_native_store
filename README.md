@@ -1,50 +1,59 @@
-# Welcome to your Expo app 👋
+Store Dashboard
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Dashboard para gerenciamento de lojas e produtos, desenvolvido com React Native, Expo Router e Zustand, utilizando Mock Service Worker (MSW) para simulação de API.
+🚀 Tecnologias Utilizadas
 
-## Get started
+    Framework: Expo (React Native)
 
-1. Install dependencies
+    Gerenciamento de Estado: Zustand (com persistência via AsyncStorage)
 
-   ```bash
-   npm install
-   ```
+    Navegação: Expo Router (File-based routing)
 
-2. Start the app
+    Mock API: Mock Service Worker (MSW)
 
-   ```bash
-   npx expo start
-   ```
+    Estilização: Gluestack UI
 
-In the output, you'll find options to open the app in a
+    Qualidade de Código: ESLint + Prettier + Husky (lint-staged)
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+⚙️ Pré-requisitos
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+    Node.js (v18+)
 
-## Get a fresh project
+    Gerenciador de pacotes: npm ou yarn
 
-When you're ready, run:
+📦 Instalação
 
-```bash
-npm run reset-project
-```
+    Clone o repositório:
+    Bash
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+    git clone <url-do-seu-repositorio>
+    cd store_dashboard
 
-## Learn more
+    Instale as dependências:
+    Bash
 
-To learn more about developing your project with Expo, look at the following resources:
+    npm install
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+🛠 Comandos Disponíveis
 
-## Join the community
+    npm start: Inicia o servidor de desenvolvimento do Expo.
 
-Join our community of developers creating universal apps.
+    npm run android: Inicia o app no emulador Android.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+    npm run ios: Inicia o app no simulador iOS.
+
+    npm run lint: Verifica erros de sintaxe e padrões de código.
+
+    npm run lint:fix: Corrige automaticamente problemas comuns de linting.
+
+    npm run format: Formata o código utilizando Prettier.
+
+    npm run test: Executa os testes unitários com Jest.
+
+📝 Como funciona o Mock (MSW)
+
+A camada de API é interceptada pelo MSW em ambiente de desenvolvimento. Os dados são manipulados em memória e persistidos localmente via Zustand + AsyncStorage.
+
+    Os arquivos de definição dos endpoints estão em src/mocks/handlers.ts.
+
+    A store global está em src/store/useProductStore.ts.
