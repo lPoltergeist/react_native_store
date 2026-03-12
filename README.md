@@ -3,17 +3,29 @@ Store Dashboard
 Dashboard para gerenciamento de lojas e produtos, desenvolvido com React Native, Expo Router e Zustand, utilizando Mock Service Worker (MSW) para simulação de API.
 🚀 Tecnologias Utilizadas
 
-    Framework: Expo (React Native)
+Framework: Expo (~54.0.33)
 
-    Gerenciamento de Estado: Zustand (com persistência via AsyncStorage)
+React: 19.1.0
 
-    Navegação: Expo Router (File-based routing)
+React Native: 0.81.5
 
-    Mock API: Mock Service Worker (MSW)
+Gerenciamento de Estado: Zustand (^5.0.11) com persistência via AsyncStorage (2.2.0)
 
-    Estilização: Gluestack UI
+Navegação: Expo Router (~6.0.23)
 
-    Qualidade de Código: ESLint + Prettier + Husky (lint-staged)
+Estilização: Gluestack UI (@gluestack-ui/themed ^1.1.73)
+
+Mock API: Mock Service Worker (^2.12.10)
+
+Qualidade de Código:
+
+    TypeScript: ~5.9.2
+
+    ESLint: ^9.39.4 (com eslint-config-expo ~10.0.0)
+
+    Prettier: ^3.8.1
+
+    Git Hooks: Husky (^8.0.0)
 
 ⚙️ Pré-requisitos
 
