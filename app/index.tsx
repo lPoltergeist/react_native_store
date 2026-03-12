@@ -5,8 +5,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { StoreCard } from '@/src/components/Card/store-card';
 import { Store } from '@/src/interfaces/store';
 import { useStoreStore } from '@/src/store/useStoreStore';
-import { RelativePathString, useRouter, useNavigation } from 'expo-router';
-import React, { useEffect, useLayoutEffect } from 'react';
+import {
+  RelativePathString,
+  useFocusEffect,
+  useNavigation,
+  useRouter,
+} from 'expo-router';
+import React, { useCallback, useLayoutEffect } from 'react';
 
 import { HeaderCreateButton } from '@/src/utils/addNew';
 
@@ -25,9 +30,11 @@ export default function StoreListScreen() {
   const { stores, isLoading, fetchStores, setSelectedStore, deleteStore } =
     useStoreStore();
 
-  useEffect(() => {
-    fetchStores();
-  }, [fetchStores]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchStores();
+    }, [fetchStores]),
+  );
 
   const handleEdit = React.useCallback(
     (store: Store) => {

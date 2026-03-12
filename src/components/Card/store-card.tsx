@@ -32,7 +32,7 @@ export const StoreCard = React.memo(
 
         <Box style={cardStyles.cardActions}>
           <Button
-            style={[cardStyles.button, , cardStyles.buttonSecondary]}
+            style={[cardStyles.button, cardStyles.buttonSecondary]}
             onPress={() => onEdit(item)}
           >
             <Text
