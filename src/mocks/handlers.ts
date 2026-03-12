@@ -38,12 +38,21 @@ export const seedDatabase = () => {
   products = [...INITIAL_PRODUCTS];
 };
 
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = 'http://192.168.1.109:3000';
 
 export const handlers = [
   //Store
-  http.get(`${BASE_URL}/stores`, () => {
-    const storesWithCount = stores.map((store) => ({
+  http.get(`${BASE_URL}/stores`, ({ request }) => {
+    const url = new URL(request.url);
+    const page = Number(url.searchParams.get('page') || 1);
+    const limit = 10;
+
+    const start = (page - 1) * limit;
+    const end = page * limit;
+
+    const paginatedStores = stores.slice(start, end);
+
+    const storesWithCount = paginatedStores.map((store) => ({
       ...store,
       productCount: products.filter((product) => product.storeId === store.id)
         .length,
@@ -76,20 +85,22 @@ export const handlers = [
 
   http.patch(`${BASE_URL}/stores/:id`, async ({ request, params }) => {
     const { id } = params;
-    const updatedStore = (await request.json()) as Partial<Omit<Store, 'id'>>;
-
-    if (!updatedStore.name || !updatedStore.address) {
-      return new HttpResponse('Invalid store name or address', { status: 400 });
-    }
+    const updateData = (await request.json()) as Partial<Store>;
 
     const storeIndex = stores.findIndex((s) => s.id === id);
-    if (storeIndex === -1)
+    if (storeIndex === -1) {
       return new HttpResponse('Store not found', { status: 404 });
+    }
 
-    const updated = { ...stores[storeIndex], ...updatedStore };
 
-    stores = stores.map((s) => (s.id === id ? updated : s));
-    return HttpResponse.json(updated, { status: 200 });
+    const updatedStore = {
+      ...stores[storeIndex],
+      ...updateData
+    };
+
+    stores[storeIndex] = updatedStore;
+
+    return HttpResponse.json(updatedStore, { status: 200 });
   }),
 
   http.delete(`${BASE_URL}/stores/:id`, async ({ params }) => {
@@ -104,19 +115,25 @@ export const handlers = [
   http.get(`${BASE_URL}/products`, ({ request }) => {
     const url = new URL(request.url);
     const storeId = url.searchParams.get('storeId');
+    const page = Number(url.searchParams.get('page') || '1');
+    const limit = 10;
 
-    const totalProducts = storeId
-      ? products.filter((p) => p.storeId === storeId)
-      : products;
+    let filteredProducts = products;
+    if (storeId) {
+      filteredProducts = products.filter((p) => p.storeId === storeId);
+    }
 
-    console.log('totalProducts', totalProducts);
+    const start = (page - 1) * limit;
+    const end = page * limit;
+    const paginatedProducts = filteredProducts.slice(start, end);
 
-    return HttpResponse.json(totalProducts, { status: 200 });
+    return HttpResponse.json(paginatedProducts, { status: 200 });
   }),
 
   http.post(`${BASE_URL}/products`, async ({ request }) => {
     const newProduct = (await request.json()) as Omit<Product, 'id'>;
 
+    console.log(newProduct);
     if (!newProduct.name || !newProduct.category || !newProduct.price) {
       return new HttpResponse('Invalid product name, category or price', {
         status: 400,
@@ -151,7 +168,7 @@ export const handlers = [
     products = products.map((s) =>
       s.id === id ? { ...s, ...updateProduct } : s,
     );
-    return HttpResponse.json(product, { status: 200 });
+    return HttpResponse.json(updateProduct, { status: 200 });
   }),
 
   http.delete(`${BASE_URL}/products/:id`, async ({ params }) => {

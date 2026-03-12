@@ -8,8 +8,10 @@ beforeEach(() => {
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
+const BASE_URL = 'http://192.168.1.109:3000';
+
 test('Must list all stores with product count', async () => {
-  const response = await fetch('http://localhost:3000/stores');
+  const response = await fetch(`${BASE_URL}/stores`);
   const stores = await response.json();
 
   expect(response.status).toBe(200);
@@ -24,7 +26,7 @@ test('Must create a new store with success', async () => {
     address: 'Rua Secundária, 171',
   };
 
-  const response = await fetch('http://localhost:3000/stores', {
+  const response = await fetch(`${BASE_URL}/stores`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -48,7 +50,7 @@ test('Must update a store with success', async () => {
     address: 'Rua Secundária, 171',
   };
 
-  const response = await fetch('http://localhost:3000/stores/1', {
+  const response = await fetch(`${BASE_URL}/stores/1`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -66,7 +68,7 @@ test('Must update a store with success', async () => {
 });
 
 test('Must delete a store with success', async () => {
-  const response = await fetch('http://localhost:3000/stores/1', {
+  const response = await fetch(`${BASE_URL}/stores/1`, {
     method: 'DELETE',
   });
 
@@ -74,7 +76,7 @@ test('Must delete a store with success', async () => {
 });
 
 test('Must list all products', async () => {
-  const response = await fetch('http://localhost:3000/products/');
+  const response = await fetch(`${BASE_URL}/products`);
   const products = await response.json();
 
   expect(response.status).toBe(200);
