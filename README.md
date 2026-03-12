@@ -1,6 +1,7 @@
 Store Dashboard
 
 Dashboard para gerenciamento de lojas e produtos, desenvolvido com React Native, Expo Router e Zustand, utilizando Mock Service Worker (MSW) para simulação de API.
+
 🚀 Tecnologias Utilizadas
 
 Framework: Expo (~54.0.33)
