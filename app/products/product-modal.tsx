@@ -30,6 +30,11 @@ export default function ProductModal() {
   const [price, setPrice] = useState(selectedProduct?.price.toString() || '');
 
   const handleSave = async () => {
+    if (!name || !category || !price) {
+      alert('Por favor, preencha todos os campos corretamente.');
+      return;
+    }
+
     const productData = {
       name,
       category,
